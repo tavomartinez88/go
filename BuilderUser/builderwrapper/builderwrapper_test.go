@@ -17,8 +17,7 @@ func get_map() map[string]string {
 }
 
 func check_post_build(user *domain.User, data map[string]string ) bool {
-	return user.Password == data["password"] &&
-			user.Email == data["email"] &&
+	return user.Email == data["email"] &&
 			user.Phone == data["phone"] &&
 			user.FirstName == data["firstname"] &&
 			user.LastName == data["lastname"]
@@ -31,5 +30,13 @@ func TestGeneratorUser_BuildUser(t *testing.T) {
 
 	if !check_post_build(user, data) {
 		t.Error("Expected info", data, "Got", user)
+	}
+}
+
+func Benchmark(b *testing.B) {
+	data := get_map()
+	for i := 0; i < b.N; i++ {
+		generator := &GeneratorUser{}
+		generator.BuildUser(builders.BuilderUser{}, data)
 	}
 }
